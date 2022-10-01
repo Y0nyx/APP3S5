@@ -1,36 +1,58 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import SignalsManager as sm
+import soundfile as sf
 
-data, fe = sm.ReadWavFile('./Signals/note_guitare_LAd.wav')
-print(data, fe)
-N = len(data)
-n = np.arange(0, N)
-K = 800
+# Constantes
+pi = np.pi
 
-# Hanning
-w = np.hanning(N)
-dataHanning = w * data
-# Magnitude
-X = np.fft.fftshift(np.fft.fft(dataHanning))
-X_mag = np.abs(X)
-# Phase
-X_phase = np.angle(X)
+#-------------------------------------------------------------------------
+# Problème 1: Synthèse d'un partition de beethoven
+#-------------------------------------------------------------------------
 
-plt.plot(n, X_phase)
-plt.show()
-exit()
+# Constantes pour le problème de synthèse de signaux
+gainCible = -3
+amplitudeCible = 10 ** (gainCible/20)
+frequenceCoupure = pi / 1000
 
-h = np.ones(K)*(1/K)
+facteurSOL = 0.891
+facteurMIbemol = 0.749
+facteurFA = 0.794
+facteurRe = 0.667
+
+# Get les données nécessaire à la synthèse
+data, fe, N = sm.ReadWavFile('./Signals/note_guitare_LAd.wav')
+K = sm.getKByAmplitude(amplitudeCible, frequenceCoupure)
+freqs, phases, gains = sm.get32PrimarySinusParams(data, fe, N)
+enveloppe = sm.getEnveloppe(data, N, K)
+
+temps = np.arange(0, N / fe, 1 / fe)
+
+# Synthèse des signaux nécessaire
+SOL = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurSOL, temps))
+MIbemol = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurMIbemol, temps))
+Silence = np.zeros(N)
+FA = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurFA, temps))
+RE = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurRe, temps))
+
+# Création de la partition
+beethoven = []
+beethoven.extend(SOL)
+beethoven.extend(SOL)
+beethoven.extend(SOL)
+beethoven.extend(MIbemol)
+beethoven.extend(Silence)
+beethoven.extend(FA)
+beethoven.extend(FA)
+beethoven.extend(FA)
+beethoven.extend(RE)
+
+# Créer le dossier .wav de la partition
+sf.write("./SignalsSynthese/beethoven.wav", beethoven, fe, 'PCM_24')
 
 
-X_mag = np.abs(X)
-X_phase = np.angle(X)
+# extra
+m = np.arange(- N/2, N/2, 1)
+W = 2*np.pi*m/N
+h_passebas = (1/K) * np.sin(W*K/2)/(np.sin(W/2) + 1e-20)
 
-plt.subplot(3, 1, 1)
-plt.stem(n, X)
-plt.subplot(3, 1, 2)
-plt.stem(n, X_mag)
-plt.subplot(3, 1, 2)
-plt.stem(n, X_phase)
-plt.show()
