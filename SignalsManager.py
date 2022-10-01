@@ -53,5 +53,3 @@ def createSound(freqs, phases, gains, facteur, temps):
     sound = sound / max(gains)
     return sound
 
-def combineEnveloppeSound(enveloppe,sound):
-    return (sound*enveloppe) /max(enveloppe)

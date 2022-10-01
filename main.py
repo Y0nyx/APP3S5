@@ -29,11 +29,11 @@ enveloppe = sm.getEnveloppe(data, N, K)
 temps = np.arange(0, N / fe, 1 / fe)
 
 # Synthèse des signaux nécessaire
-SOL = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurSOL, temps))
-MIbemol = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurMIbemol, temps))
+SOL = enveloppe * sm.createSound(freqs, phases, gains, facteurSOL, temps)
+MIbemol = enveloppe * sm.createSound(freqs, phases, gains, facteurMIbemol, temps)
 Silence = np.zeros(N)
-FA = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurFA, temps))
-RE = sm.combineEnveloppeSound(enveloppe, sm.createSound(freqs, phases, gains, facteurRe, temps))
+FA = enveloppe * sm.createSound(freqs, phases, gains, facteurFA, temps)
+RE = enveloppe * sm.createSound(freqs, phases, gains, facteurRe, temps)
 
 # Création de la partition
 beethoven = []
