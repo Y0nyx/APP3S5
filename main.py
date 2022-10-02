@@ -29,11 +29,11 @@ enveloppe = sm.getEnveloppe(data, N, K)
 temps = np.arange(0, N / fe, 1 / fe)
 
 # Synthèse des signaux nécessaire
-SOL = enveloppe * sm.createSound(freqs, phases, gains, facteurSOL, temps)
-MIbemol = enveloppe * sm.createSound(freqs, phases, gains, facteurMIbemol, temps)
+SOL = enveloppe * sm.createSound32Sinus(freqs, phases, gains, facteurSOL, temps)
+MIbemol = enveloppe * sm.createSound32Sinus(freqs, phases, gains, facteurMIbemol, temps)
 Silence = np.zeros(N)
-FA = enveloppe * sm.createSound(freqs, phases, gains, facteurFA, temps)
-RE = enveloppe * sm.createSound(freqs, phases, gains, facteurRe, temps)
+FA = enveloppe * sm.createSound32Sinus(freqs, phases, gains, facteurFA, temps)
+RE = enveloppe * sm.createSound32Sinus(freqs, phases, gains, facteurRe, temps)
 
 # Création de la partition
 beethoven = []
@@ -50,6 +50,38 @@ beethoven.extend(RE)
 # Créer le dossier .wav de la partition
 sf.write("./SignalsSynthese/beethoven.wav", beethoven, fe, 'PCM_24')
 
+#-------------------------------------------------------------------------
+# Problème 2: Éliminer la sinusoïdade à 1000 hz
+#-------------------------------------------------------------------------
+
+data2, fe2, N2 = sm.ReadWavFile('./Signals/note_basson_plus_sinus_1000_Hz.wav')
+N2 = 6000
+K2 = 81
+n = np.arange(0, N2)
+g = [0] * (N2)
+g[0] = 1
+
+h2 = (1 / N2) * np.sin(np.pi * n * K2 / N2) / (np.sin(np.pi * n / N2) + 1e-20)
+H2 = np.fft.fft(h2)
+
+hcoupebande = g - (2*h2*np.cos(2*pi*1000*n/fe2))
+Hcoupebande = np.fft.fft(hcoupebande)
+
+response = np.convolve(data2, hcoupebande)
+
+#plt.plot(temps2, data2)
+#plt.plot(temps2, response)
+#plt.show()
+
+plt.subplot(3, 1, 1)
+plt.stem(h2)
+plt.subplot(3, 1, 2)
+plt.stem(np.abs(H2))
+plt.subplot(3, 1, 3)
+plt.stem(response)
+plt.show()
+
+sf.write("./SignalsSynthese/response2.wav", response, fe2, 'PCM_24')
 
 # extra
 m = np.arange(- N/2, N/2, 1)

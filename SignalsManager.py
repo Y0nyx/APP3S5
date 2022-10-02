@@ -46,7 +46,7 @@ def get32PrimarySinusParams(data, fe, N):
         gains.append(gain[(peaks32[i])])
     return freqs, phases, gains
 
-def createSound(freqs, phases, gains, facteur, temps):
+def createSound32Sinus(freqs, phases, gains, facteur, temps):
     sound = np.zeros(len(temps))
     for i in range(0, 32):
         sound += gains[i] * np.sin(2 * np.pi * freqs[i] * facteur * temps + phases[i])
