@@ -16,7 +16,7 @@ amplitudeCible = 10 ** (gainCible/20)
 frequenceCoupure = pi / 1000
 
 facteurSOL = 0.891
-facteurMIbemol = 0.749
+facteurMIbemol = 0.707
 facteurFA = 0.794
 facteurRe = 0.667
 
@@ -37,15 +37,15 @@ RE = enveloppe * sm.createSound32Sinus(freqs, phases, gains, facteurRe, temps)
 
 # Création de la partition
 beethoven = []
-beethoven.extend(SOL)
-beethoven.extend(SOL)
-beethoven.extend(SOL)
-beethoven.extend(MIbemol)
-beethoven.extend(Silence)
-beethoven.extend(FA)
-beethoven.extend(FA)
-beethoven.extend(FA)
-beethoven.extend(RE)
+beethoven.extend(SOL[0:27000])
+beethoven.extend(SOL[0:27000])
+beethoven.extend(SOL[0:27000])
+beethoven.extend(MIbemol[0:80000])
+beethoven.extend(Silence[0:27000])
+beethoven.extend(FA[0:27000])
+beethoven.extend(FA[0:27000])
+beethoven.extend(FA[0:27000])
+beethoven.extend(RE[0:80000])
 
 # Créer le dossier .wav de la partition
 sf.write("./SignalsSynthese/beethoven.wav", beethoven, fe, 'PCM_24')
@@ -54,37 +54,30 @@ sf.write("./SignalsSynthese/beethoven.wav", beethoven, fe, 'PCM_24')
 # Problème 2: Éliminer la sinusoïdade à 1000 hz
 #-------------------------------------------------------------------------
 
-data2, fe2, N2 = sm.ReadWavFile('./Signals/note_basson_plus_sinus_1000_Hz.wav')
-N2 = 6000
-K2 = 81
-n = np.arange(0, N2)
-g = [0] * (N2)
+# extraction des paramètres de la note de basson
+son_basson, fe_basson = sm.ReadWavFile('./Signals/note_basson_plus_sinus_1000_Hz.wav')
+
+# constantes
+N_basson = 6000
+K_basson = 81
+n = np.arange(0, N_basson)
+
+# création du signal dirac
+g = [0] * (N_basson)
 g[0] = 1
 
-h2 = (1 / N2) * np.sin(np.pi * n * K2 / N2) / (np.sin(np.pi * n / N2) + 1e-20)
-H2 = np.fft.fft(h2)
+# création du passe-bas
+h_passebas = (1 / N_basson) * np.sin(np.pi * n * K_basson / N_basson) / (np.sin(np.pi * n / N_basson) + 1e-20)
+H_passebas = np.fft.fft(h_passebas)
 
-hcoupebande = g - (2*h2*np.cos(2*pi*1000*n/fe2))
-Hcoupebande = np.fft.fft(hcoupebande)
+# création du coupe-bande avec le passe-bas
+h_coupebande = g - (2*h_passebas*np.cos(2*pi*1000*n/fe_basson))
+H_coupebande = np.fft.fft(h_coupebande)
 
-response = np.convolve(data2, hcoupebande)
+# passer le son de basson dans le filtre 3 fois
+son_basson_clair = np.convolve(son_basson, h_coupebande)
+son_basson_clair = np.convolve(son_basson_clair, h_coupebande)
+son_basson_clair = np.convolve(son_basson_clair, h_coupebande)
 
-#plt.plot(temps2, data2)
-#plt.plot(temps2, response)
-#plt.show()
-
-plt.subplot(3, 1, 1)
-plt.stem(h2)
-plt.subplot(3, 1, 2)
-plt.stem(np.abs(H2))
-plt.subplot(3, 1, 3)
-plt.stem(response)
-plt.show()
-
-sf.write("./SignalsSynthese/response2.wav", response, fe2, 'PCM_24')
-
-# extra
-m = np.arange(- N/2, N/2, 1)
-W = 2*np.pi*m/N
-h_passebas = (1/K) * np.sin(W*K/2)/(np.sin(W/2) + 1e-20)
-
+# Créer le file .wav du son de basson clair
+sf.write("./SignalsSynthese/son_basson_clair.wav", son_basson_clair, fe_basson, 'PCM_24')

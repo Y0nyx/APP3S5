@@ -1,7 +1,6 @@
 import soundfile as sf
 import numpy as np
 import spicy
-import matplotlib.pyplot as plt
 
 def getEnveloppe(data, N, K):
     h = np.ones(K) * (1 / K)
@@ -44,6 +43,7 @@ def get32PrimarySinusParams(data, fe, N):
         phases.append(phase[(peaks32[i])])
         # on va chercher le gain au m correspondant
         gains.append(gain[(peaks32[i])])
+    print(gains)
     return freqs, phases, gains
 
 def createSound32Sinus(freqs, phases, gains, facteur, temps):
