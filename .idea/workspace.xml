@@ -2,10 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0b2f655d-1bb4-4b67-93c6-455ceb752a45" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SignalsSynthese/response2.wav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Graphique/ComparaisonSynthèseVsOriginalLa#.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Graphique/ComparaisonSynthèseVsOriginalSonBasson.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Graphique/EnveloppeSonBasson.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Graphique/EnveloppeSonGuitare.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Graphique/RéponseImpulsionnelleFiltreCoupeBande.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Graphique/RéponseImpulsionnelleFiltrePasseBas.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Graphique/SpectreFourrierLa#Original.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/SignalsSynthese/son_basson_clair.wav" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PlotsManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/PlotsManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SignalsManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/SignalsManager.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SignalsSynthese/beethoven.wav" beforeDir="false" afterPath="$PROJECT_DIR$/SignalsSynthese/beethoven.wav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SignalsSynthese/response.wav" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/SignalsSynthese/response2.wav" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

@@ -6,6 +6,7 @@ def getEnveloppe(data, N, K):
     h = np.ones(K) * (1 / K)
     enveloppe = np.convolve(h, abs(data))
     return enveloppe[0:N]
+
 def ReadWavFile(filePath):
     if '.wav' not in filePath:
         raise Exception('this file is not an .wav file')
@@ -27,24 +28,30 @@ def getKByAmplitude(amplitudeCible, frequenceCoupure):
 def get32PrimarySinusParams(data, fe, N):
     # on trouve le gain et la phase sur la longueur de l'échantillon
     X = np.fft.fft(data)
-    gain = np.abs(X)
+    amplitude = np.abs(X)
     phase = np.angle(X)
     # on trouve les peaks du signal
     peaks = spicy.signal.find_peaks(X, distance=1600)
     peaks32 = peaks[0][0:32]
 
-    gains = []
+    amplitudes = []
     phases = []
     freqs = []
+
     for i in range(0, 32):
         # f = fe * m / N
+
         freqs.append((peaks32[i] * fe) / N)
         # on va chercher la phase au m correspondant
         phases.append(phase[(peaks32[i])])
         # on va chercher le gain au m correspondant
-        gains.append(gain[(peaks32[i])])
-    print(gains)
-    return freqs, phases, gains
+        amplitudes.append(amplitude[(peaks32[i])])
+    for i in range(0, 16):
+        string = str(round(freqs[i], 2)) + " & " + str(round(phases[i], 2)) + " & " + str(round(20 * np.log10(np.abs(amplitudes[i])), 2)) + " & " + str(round(freqs[16 + i], 2)) + " & " + str(round(phases[16 + i], 2)) + " & " + str(round(20 * np.log10(np.abs(amplitudes[16 + i])),2)) + " \\hline"
+        print(string)
+    return freqs, phases, amplitudes
+
+
 
 def createSound32Sinus(freqs, phases, gains, facteur, temps):
     sound = np.zeros(len(temps))
