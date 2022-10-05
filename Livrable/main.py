@@ -105,10 +105,10 @@ enveloppe_basson = sm.getEnveloppe(son_basson_clair, len(son_basson_clair), K)
 
 #pm.plotReponseImplusionnelFrequenciel(np.abs(np.fft.fftshift(np.fft.fft(h_coupebande))), "Amplitude du filtre coupe-bande", "Amplitude(db)", "W (rad/échantillon)")
 #pm.plotReponseImplusionnelFrequenciel(h_coupebande, "Réponse Impulsionnel temporel du filtre coupe-bande", "Amplitude(db)", "W (rad/échantillon)")
-#pm.plotReponseImplusionnelTemporel(h_coupebande, "Réponse impulsionnelle du filtre coupe-bande", "Amplitude", "W (rad/échantillon)")
+pm.plotReponseImplusionnelTemporel(h_coupebande, "Réponse impulsionnelle du filtre coupe-bande", "Amplitude", "W (rad/échantillon)")
 #pm.plotPhase(np.angle(np.fft.fftshift(np.fft.fft(h_coupebande))),"Phase du filtre coupe-bande", "Amplitude", "W (rad/échantillon)")
 
-pm.plotSinus(h_coupebande,"Réponse impulsionnelle h[n]", "Amplitude", "n (échantillon)")
+#pm.plotSinus(h_coupebande,"Sinus du filtre coupe-bande", "Amplitude", "n (échantillon)")
 temps_Sinus = np.arange(0, N_guitare / fe_basson, 1 / fe_basson)
 sinus1000Hz = np.sin(2 * np.pi * 1000 * temps_Sinus)
 WhanningSinus = np.hanning(len(sinus1000Hz))
